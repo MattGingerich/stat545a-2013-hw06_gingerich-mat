@@ -27,3 +27,7 @@ In theory, getting categories from NIGP codes should be fairly straightforward, 
 
 Data Visualization
 -------------------
+![The 60 Largest Purchase Orders](https://raw.github.com/MattGingerich/stat545a-2013-hw06_gingerich-mat/master/1-AfterScriptsRun/OutputFigures/01-LargestOrders.png)
+![Distribution of Earnings by Supplier](https://raw.github.com/MattGingerich/stat545a-2013-hw06_gingerich-mat/master/1-AfterScriptsRun/OutputFigures/02-EarningsBySupplier.png)
+![10 Biggest Suppliers](https://raw.github.com/MattGingerich/stat545a-2013-hw06_gingerich-mat/master/1-AfterScriptsRun/OutputFigures/03-BiggestSuppliers.png)
+![Most Expensive NIGP Categories](https://raw.github.com/MattGingerich/stat545a-2013-hw06_gingerich-mat/master/1-AfterScriptsRun/OutputFigures/04-PriciestAreas.png)
