@@ -70,6 +70,29 @@ p <- p + geom_bar(stat="identity", position="dodge")
 p <- p + scale_fill_manual(name="Supplier's State", values=brewColors)
 p <- p + scale_y_log10(labels = trans_format("log10", math_format(10^.x)))
 p <- p + coord_flip()
-p <- p + ggtitle(paste("The", n, "Most Expensive Purchase Order Categories in 2010-2011"))
+p <- p + ggtitle(paste("The", n, "Most Expensive\nPurchase Order Categories"))
 print(p)
 ggsave(file.path(figureFolder, "04-PriciestAreas.png"))
+
+# Plot over time
+# Set up a factor representing the month and a separate column holding monthly divisions over all years
+dcDat$month <- as.factor(format(dcDat$ORDER_DATE, "%b"))
+dcDat$month <- factor(dcDat$month,
+                      levels=c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+dcDat$monthly <- as.Date(cut(dcDat$ORDER_DATE, breaks = "month"))
+# Sum the total orders per month
+timeDat <-  ddply(dcDat, ~monthly, summarize,
+                  year=as.factor(format(ORDER_DATE[[1]], "%Y")),
+                  month=month[[1]],
+                  orderVolume=sum(PO_TOTAL_AMOUNT))
+# Plot volume by month with years overlaid
+p <- ggplot(timeDat, aes(x=month, y=orderVolume, group=year, color=year)) + geom_line()
+# Force the y-axis to avoid scientific notation for representing money
+p <- p + scale_y_log10(breaks = 1:7*1e8+5e7, labels = comma)
+p <- p + ggtitle(paste("Purchasing Volume by Month"))
+p <- p + xlab("Month")
+p <- p + ylab("Total Purchase Order Value (USD)")
+p <- p + scale_color_manual(name="Year", values=brewColors)
+print(p)
+ggsave(file.path(figureFolder, "05-PurchasingByMonth.png"))
