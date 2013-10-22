@@ -19,19 +19,19 @@ years <- c(2010, 2011)
 
 # Download and unzip all files.
 if (downloadFiles){
-  download.file(commodityBookUrl, paste0(dataFolder, '/', commodityBook))
+  download.file(commodityBookUrl, file.path(dataFolder, commodityBook))
   for (year in years) {
     fileUrl <- sub("YYYY", year, zippedDataUrl)
-    zippedFile <- paste0(dataFolder, '/', basename(fileUrl))
+    zippedFile <- file.path(dataFolder, basename(fileUrl))
     download.file(fileUrl, zippedFile)
     unzip(zippedFile, exdir=dataFolder)
   }
 }
 
 # Read in data files.
-nigpCodes <- read.delim(paste0(dataFolder, '/', commodityBook), sep=',')
-dcDat2010 <- read.delim(paste0(dataFolder, '/', "pass_2010_CSV.csv"), sep=',')
-dcDat2011 <- read.delim(paste0(dataFolder, '/', "pass_2011_CSV.csv"), sep=',')
+nigpCodes <- read.delim(file.path(dataFolder, commodityBook), sep=',')
+dcDat2010 <- read.delim(file.path(dataFolder, "pass_2010_CSV.csv"), sep=',')
+dcDat2011 <- read.delim(file.path(dataFolder, "pass_2011_CSV.csv"), sep=',')
 
 # Merge data from both years.
 dcDat <- rbind(dcDat2010, dcDat2011)
@@ -136,4 +136,4 @@ dcDat <- as.data.frame(dcTab[,mutate(.SD, PURCHASE_TYPE=list.getPurchaseClass(NI
 dcDat <- dcDat[with(dcDat, order(-PO_TOTAL_AMOUNT)),]
 
 # Write the painstakingly cleaned data to file
-write.table(dcDat, paste0(dataFolder,"/dcPurchases_clean.csv"), sep = ",", row.names = FALSE)
+write.table(dcDat, file.path(dataFolder,"dcPurchases_clean.csv"), sep = ",", row.names = FALSE)

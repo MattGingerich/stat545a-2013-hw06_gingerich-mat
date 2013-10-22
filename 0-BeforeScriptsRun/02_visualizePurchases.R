@@ -6,7 +6,7 @@ library(plyr)
 # Loading in the clean data
 dataFolder <- "InputData"
 figureFolder <- "OutputFigures"
-dcDat <- read.delim(paste0(dataFolder, '/', "dcPurchases_clean.csv"), sep=',')
+dcDat <- read.delim(file.path(dataFolder, "dcPurchases_clean.csv"), sep=',')
 dcDat$ORDER_DATE <- as.Date(dcDat$ORDER_DATE)
 
 # Plotting the largest purchase orders, arranged by size, and coloured by the state of the supplier
