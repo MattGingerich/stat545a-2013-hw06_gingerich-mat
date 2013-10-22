@@ -86,7 +86,10 @@ getPurchaseClass <- function(NIGP_DESCRIPTION) {
   matches <- subset(nigpCodes, (code==Item) & grepl(toupper(text), toupper(Description), fixed=TRUE))
   if (nrow(matches) > 0) {
     classCode <- matches[1,"Class"]
+    # Generic class labels are listed in the same table as specific items,
+    # but the generic classes are all given the item code zero.
     itemClass <- subset(nigpCodes, Class == classCode & Item == 0)[,"Description"]
+    # Remove the leading asterisk in front of class names
     itemClass <- sub("^\\*", "", itemClass)
   } else {
     itemClass <- "UNKNOWN"
@@ -117,19 +120,19 @@ list.getPurchaseClass <- function(NIGP_DESCRIPTION){
 # This seems wildly inefficient, as my data frames should only be several MB large.
 # More importantly, I didn't have the RAM or patience to get results with this method.
 
-#library(plyr)
 #adplyTest <- adply(head(dcDat), 1, transform,
 #           PURCHASE_TYPE=getPurchaseClass(NIGP_DESCRIPTION),
 #           NIGP_DESCRIPTION=dropLastWord(NIGP_DESCRIPTION))
 
 # As an alternative, I converted my data to a data.table object (using the data.table
-# library) and used its mutate function to transform the data.
+# library) and used plyr's mutate function to transform the data.
 
 dcTab <- as.data.table(dcDat)
 setkeyv(dcTab, "PO_NUMBER")
 dcDat <- as.data.frame(dcTab[,mutate(.SD, PURCHASE_TYPE=list.getPurchaseClass(NIGP_DESCRIPTION),
                                     NIGP_DESCRIPTION=list.dropLastWord(NIGP_DESCRIPTION))])
 
+# Order the data by decreasing value of the purchase orders.
 dcDat <- dcDat[with(dcDat, order(-PO_TOTAL_AMOUNT)),]
 
 # Write the painstakingly cleaned data to file
