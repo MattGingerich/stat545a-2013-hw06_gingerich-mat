@@ -6,6 +6,9 @@ library(plyr)
 # Loading in the clean data
 dataFolder <- "InputData"
 figureFolder <- "OutputFigures"
+if(!file.exists(figureFolder)) {
+  dir.create(figureFolder)
+}
 dcDat <- read.delim(file.path(dataFolder, "dcPurchases_clean.csv"), sep=',')
 dcDat$ORDER_DATE <- as.Date(dcDat$ORDER_DATE)
 
